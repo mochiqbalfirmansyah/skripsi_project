@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:skripsi_project/helper/cardNotification.dart';
 import 'package:skripsi_project/helper/cardRiwayat.dart';
 
-class RiwayatView extends StatefulWidget {
-  const RiwayatView({Key? key}) : super(key: key);
+class NotificationView extends StatefulWidget {
+  const NotificationView({Key? key}) : super(key: key);
 
   @override
-  State<RiwayatView> createState() => _RiwayatViewState();
+  State<NotificationView> createState() => NotificationViewState();
 }
 
-class _RiwayatViewState extends State<RiwayatView> {
+class NotificationViewState extends State<NotificationView> {
   static const _pageSize = 5; // Jumlah item per halaman
   final PagingController<int, dynamic> _pagingController =
       PagingController(firstPageKey: 0);
@@ -43,51 +44,20 @@ class _RiwayatViewState extends State<RiwayatView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: const Text(
-            'Pengelolaan Air PDAM',
-            style: TextStyle(color: Colors.white),
-          ),
+        title: const Text(
+          'Notifikasi',
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue,
+        centerTitle: true, // Memastikan judul berada di tengah
+        iconTheme: const IconThemeData(color: Colors.white), // Warna ikon back
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(15.0),
             child: Row(
               children: [
-                Expanded(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.blue, // Latar belakang biru
-                      shape: BoxShape.circle, // Bentuk lingkaran
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        // Aksi ketika ikon kalender ditekan
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text("Kalender"),
-                            content:
-                                const Text("Fitur kalender belum tersedia."),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text("OK"),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.calendar_today),
-                      color: Colors.white, // Warna ikon
-                    ),
-                  ),
-                ),
                 const SizedBox(width: 8), // Jarak antar elemen
                 Expanded(
                   flex: 3, // Mengatur proporsi ruang
@@ -137,7 +107,7 @@ class _RiwayatViewState extends State<RiwayatView> {
             child: PagedListView<int, dynamic>(
               pagingController: _pagingController,
               builderDelegate: PagedChildBuilderDelegate<dynamic>(
-                itemBuilder: (context, item, index) => UsageCard(),
+                itemBuilder: (context, item, index) => NotificationCard(),
                 firstPageErrorIndicatorBuilder: (context) => const Center(
                   child: Text("Error memuat data."),
                 ),

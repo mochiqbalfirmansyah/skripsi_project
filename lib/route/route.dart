@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skripsi_project/view/homeView.dart';
+import 'package:skripsi_project/view/notificationView.dart';
 import 'package:skripsi_project/view/riwayatPenggunaanView.dart';
 import 'package:skripsi_project/view/splashscreenView.dart';
 
@@ -19,6 +20,10 @@ class AppRouter {
       GoRoute(
         path: '/riwayat',
         builder: (context, state) => RiwayatView(),
+      ),
+      GoRoute(
+        path: '/notification',
+        builder: (context, state) => NotificationView(),
       ),
     ],
   );
