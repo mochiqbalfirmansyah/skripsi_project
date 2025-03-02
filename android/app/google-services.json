@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "178334089218",
+    "project_id": "iot-notification-b9762",
+    "storage_bucket": "iot-notification-b9762.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:178334089218:android:47a4f77c2588408b31671b",
+        "android_client_info": {
+          "package_name": "com.example.skripsi_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEElsQCEThd84286m2cdZ9aobLdjtkNfA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:178334089218:android:c53681e072e84ab731671b",
+        "android_client_info": {
+          "package_name": "iot_laravel_flutter.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEElsQCEThd84286m2cdZ9aobLdjtkNfA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

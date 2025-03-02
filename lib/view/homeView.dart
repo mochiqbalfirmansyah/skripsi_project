@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:skripsi_project/view/notificationView.dart';
+import 'package:skripsi_project/viewmodel/laporanBulananTerbaruViewModel.dart';
+import 'package:skripsi_project/viewmodel/laporanBulananViewModel.dart';
+import 'package:skripsi_project/viewmodel/laporanHarianTerbaruViewModel.dart';
+import 'package:skripsi_project/viewmodel/laporanViewModel.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
   Widget build(BuildContext context) {
+    final laporanDayNew =
+        ref.watch(LaporanHarianTerbaruViewModel.laporanProvider);
+    final laporanMonthNew =
+        ref.watch(LaporanBulananTerbaruViewModel.laporanProvider);
+    final laporanMonth = ref.watch(LaporanBulananViewModel.laporanProvider);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -35,26 +51,21 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Statistik Bulanan Section
+                // Header Statistik
                 Row(
                   children: const [
-                    Icon(
-                      Icons.bar_chart, // Ikon untuk Statistik Bulanan
-                      color: Colors.blue,
-                      size: 24,
-                    ),
-                    SizedBox(width: 8), // Jarak antara ikon dan teks
+                    Icon(Icons.bar_chart, color: Colors.blue, size: 24),
+                    SizedBox(width: 8),
                     Text(
                       'Statistik Bulanan',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 16),
+
+                // Grafik BarChart
                 SizedBox(
                   height: 200,
                   child: BarChart(
@@ -76,14 +87,11 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         leftTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
+                            sideTitles: SideTitles(showTitles: false)),
                         rightTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
+                            sideTitles: SideTitles(showTitles: false)),
                         topTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
+                            sideTitles: SideTitles(showTitles: false)),
                       ),
                       gridData: const FlGridData(show: false),
                       borderData: FlBorderData(show: false),
@@ -97,8 +105,7 @@ class HomeScreen extends StatelessWidget {
                               color: Colors.blue.shade200,
                               width: 16,
                               borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(4),
-                              ),
+                                  top: Radius.circular(4)),
                             ),
                           ],
                         ),
@@ -106,69 +113,70 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 24),
 
-                // Ringkasan Penggunaan Section
+                // Ringkasan Penggunaan
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Row(
                       children: [
-                        Icon(
-                          Icons.info, // Ganti dengan ikon yang diinginkan
-                          color: Colors.blue,
-                          size: 24,
-                        ),
-                        SizedBox(
-                            width:
-                                8), // Memberikan sedikit jarak antara ikon dan teks
+                        Icon(Icons.info, color: Colors.blue, size: 24),
+                        SizedBox(width: 8),
                         Text(
                           'Ringkasan Penggunaan',
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
+
+                    // Data Penggunaan
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: Colors.blue.shade50,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Hari Ini'),
-                              SizedBox(height: 4),
-                              Text(
-                                '5m³',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                              const Text('Hari Ini'),
+                              const SizedBox(height: 4),
+                              laporanDayNew.when(
+                                data: (laporan) => Text(
+                                  "${laporan.dataHarian} m",
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
                                 ),
+                                loading: () =>
+                                    const CircularProgressIndicator(),
+                                error: (err, stack) => Text('Error: $err'),
                               ),
                             ],
                           ),
-                          SizedBox(
-                            width: 100,
-                          ),
+                          const Spacer(),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Bulan ini'),
-                              SizedBox(height: 4),
-                              Text(
-                                '20m³',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                              const Text('Bulan ini'),
+                              const SizedBox(height: 4),
+                              laporanMonthNew.when(
+                                data: (laporanBulanan) => Text(
+                                  "${laporanBulanan.dataHarian} m",
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
                                 ),
+                                loading: () =>
+                                    const CircularProgressIndicator(),
+                                error: (err, stack) => Text('Error: $err'),
                               ),
                             ],
                           ),
@@ -180,26 +188,18 @@ class HomeScreen extends StatelessWidget {
 
                 const SizedBox(height: 24),
 
-                // Riwayat Terbaru Section
+                // Riwayat Terbaru
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Row(
                       children: [
-                        Icon(
-                          Icons.history, // Ganti dengan ikon yang diinginkan
-                          color: Colors.blue,
-                          size: 24,
-                        ),
-                        SizedBox(
-                            width:
-                                8), // Memberikan sedikit jarak antara ikon dan teks
+                        Icon(Icons.history, color: Colors.blue, size: 24),
+                        SizedBox(width: 8),
                         Text(
                           'Riwayat Terbaru',
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -211,27 +211,36 @@ class HomeScreen extends StatelessWidget {
                         color: Colors.blue.shade50,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '12 Desember 2024',
-                            style: TextStyle(
-                              color: Colors.grey.shade700,
-                            ),
+                      child: laporanDayNew.when(
+                        data: (laporan) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("31 Feb 25",
+                                  style: TextStyle(
+                                      color: Colors.grey.shade700,
+                                      fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Penggunaan Hari ini : ${laporan.dataHarian} m',
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          );
+                        },
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        error: (err, stack) => Center(
+                          child: Text(
+                            'Terjadi kesalahan: $err',
+                            style: const TextStyle(
+                                color: Colors.red, fontSize: 14),
                           ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'Penggunaan Hari ini : 5m³',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
